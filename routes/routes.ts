@@ -1,6 +1,7 @@
 
 
 import {Router, Request, Response} from 'express';
+import Server from '../classes/server';
 // Si quisieramos exportar más cosas de aqui lo pondriamos asi la exportación
 // export const router = Router(); //El router es el que voy a ocupar para crear mis api.endpoint  o mis servicios REST
 const router = Router();
@@ -21,6 +22,13 @@ router.post('/mensajes', (req:Request, rest: Response) => {
     const cuerpo = req.body.cuerpo;
     const de = req.body.de;
 
+    const payload = {
+        de,
+        cuerpo
+    }
+
+    const server = Server.instance;
+    server.io.emit('mensaje-nuevo', payload); //Para enviar mensajes a todos
 
 
     rest.json({
@@ -37,6 +45,16 @@ router.post('/mensajes/:id', (req:Request, rest: Response) => {
     const cuerpo = req.body.cuerpo;
     const de = req.body.de;
     const id = req.params.id;
+
+    const payload = {
+        de,
+        cuerpo
+    }
+
+
+    const server = Server.instance; //como es un singleton es la misma instancia
+
+    server.io.in( id ).emit('mensaje-privado', payload); // Para enviar mensaje privado
 
 
     rest.json({
