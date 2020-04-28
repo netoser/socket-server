@@ -46,6 +46,8 @@ export  default class Server {
 
           // Consigurar Usuario
             mySocket.configurarUsuario( cliente, this.io);
+            //Obtenr usuarios activos
+            mySocket.ObtenerUsusarios(cliente, this.io);
 
             // console.log('Cliente conectado');
             // console.log('idSocket: ' , cliente.id);
@@ -60,7 +62,7 @@ export  default class Server {
             mySocket.mensaje( cliente, this.io );
 
             // Desconectar
-            mySocket.desconectar(cliente);
+            mySocket.desconectar(cliente, this.io);
 
            
  

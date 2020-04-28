@@ -32,7 +32,11 @@ export class UsuariosLista {
 
     //Obtenr lista de usuarios conectados
     public getLista(){
-        return this.lista;
+
+        return this.lista.filter(usuario => {
+            return usuario.nombre !== 'sin-nombre';
+
+        });
     }
 
     //Regresar un usuario

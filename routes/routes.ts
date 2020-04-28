@@ -2,6 +2,8 @@
 
 import {Router, Request, Response} from 'express';
 import Server from '../classes/server';
+// import { Socket } from 'socket.io';
+import { usuariosConectados } from '../sockets/socket';
 // Si quisieramos exportar más cosas de aqui lo pondriamos asi la exportación
 // export const router = Router(); //El router es el que voy a ocupar para crear mis api.endpoint  o mis servicios REST
 const router = Router();
@@ -40,7 +42,7 @@ router.post('/mensajes', (req:Request, rest: Response) => {
 
 });
 
-router.post('/mensajes/:id', (req:Request, rest: Response) => {
+router.post('/mensajes/:id', (req:Request, res: Response) => {
 
     const cuerpo = req.body.cuerpo;
     const de = req.body.de;
@@ -57,7 +59,7 @@ router.post('/mensajes/:id', (req:Request, rest: Response) => {
     server.io.in( id ).emit('mensaje-privado', payload); // Para enviar mensaje privado
 
 
-    rest.json({
+    res.json({
         ok: true,
         cuerpo,
         de,
@@ -65,5 +67,40 @@ router.post('/mensajes/:id', (req:Request, rest: Response) => {
     });
 
 });
+
+
+
+// Servicio para obtener todos los id de los usuarios
+router.get('/usuarios', (req:Request, res: Response) => {
+    
+    const server = Server.instance;
+    server.io.clients( (err: any, clientes: string[]) => {
+        if( err ) {
+            return res.json ( {
+                ok: false,
+                err
+            })
+        }
+
+
+        res.json ({
+            ok: true,
+            clientes: clientes
+        })
+
+    });
+
+});
+
+// Obtener usuarios y sus nombres
+router.get('/usuarios/detalle', (req:Request, res: Response) => {
+    
+    res.json ({
+        ok: true,
+        clientes: usuariosConectados.getLista()
+    })
+
+});
+
 
 export default router;
