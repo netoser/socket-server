@@ -7,7 +7,8 @@ import bodyParser from 'body-parser';
 
 import cors from 'cors';
 
-const server = new Server();
+// const server = new Server();
+const server = Server.instance;
 
 
 // BodyParser
